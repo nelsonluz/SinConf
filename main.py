@@ -30,6 +30,7 @@ def main(page: ft.Page):
         page.update()
     
     def zeratualizar():
+        id_atualizar.value = ""
         ano_atualizar.value = ""
         unidadegestora_atualizar.value = ""
         numeracao_atualizar.value = ""
@@ -47,6 +48,7 @@ def main(page: ft.Page):
         campo_pesquisa.visible=False
         # print(e.control.cells[0].content.value)
         dooc=Document.get(Document.id==int(e.control.cells[0].content.value))
+        id_atualizar.value=dooc.id
         ano_atualizar.value=dooc.ano
         unidadegestora_atualizar.value = dooc.unidadegestora 
         numeracao_atualizar.value = dooc.numeracao
@@ -73,34 +75,73 @@ def main(page: ft.Page):
         print(f"apagar {e}")
     
     def atualizar(e):
-        print(f"atualizar {e}")
+        atualizacao = Document.update({
+            Document.ano:ano_atualizar.value,
+            Document.unidadegestora:unidadegestora_atualizar.value,
+            Document.numeracao:numeracao_atualizar.value,
+            Document.assunto:assunto_atualizar.value,
+            Document.tipoprocesso:tipoprocesso_atualizar.value,
+            Document.locprocesso:locprocesso_atualizar.value,
+            }).where(Document.id==id_atualizar.value)
+        print(f"funcao atualizar: {atualizacao}")
+        
+        atualizacao.execute()
+        
+        zeratualizar()
+        preencher_datatable()
+        pesquisa.update()
+    
+    def preencher_datatable():
+        cores=[ft.colors.GREEN_50, ft.colors.BLACK45]
+        pesquisa.rows.clear()
+        for i, doc in enumerate(Document.select(), 1):
+            print(f"DocumentoXXXXXX: {doc.id, doc.ano, doc.unidadegestora, doc.numeracao, doc.assunto, doc.tipoprocesso, doc.locprocesso}")
+            pesquisa.rows.append(
+                
+                ft.DataRow(cells=[
+                    ft.DataCell(ft.Text(doc.id), visible=False), 
+                    ft.DataCell(ft.Text(doc.ano, color=cor, size=15,  on_tap=preencher_campos,)), 
+                    ft.DataCell(ft.Text(doc.unidadegestora, color=cor, size=15)), 
+                    ft.DataCell(ft.Text(doc.numeracao, color=cor, size=15)),
+                    ft.DataCell(ft.Text(doc.assunto, color=cor, size=15)),  
+                    ft.DataCell(ft.Text(doc.tipoprocesso, color=cor, size=15)), 
+                    ft.DataCell(ft.Text(doc.locprocesso, color=cor, size=15)),
+                    ],
+                    color=cores[i%2],
+                    on_select_changed=preencher_campos,
+                    # on_long_press=preencher_campos,
+                    )
+            )
+            # pesquisa.rows.append(linhas)
+        # page.update()
     
     def set_screen(e):
         print(e)
         # cores=["#759DCB", "#DABD90"]
-        cores=[ft.colors.GREEN_50, ft.colors.BLACK45]
+        # cores=[ft.colors.GREEN_50, ft.colors.BLACK45]
         principal.content=screen_lista[e.control.selected_index]
         if e.control.selected_index == 1:
-            pesquisa.rows.clear()
-            for i, doc in enumerate(Document.select(), 1):
-                print(f"Documento: {doc.id, doc.ano, doc.unidadegestora, doc.numeracao, doc.assunto, doc.tipoprocesso, doc.locprocesso}")
-                pesquisa.rows.append(
+            preencher_datatable()
+        #     pesquisa.rows.clear()
+        #     for i, doc in enumerate(Document.select(), 1):
+        #         print(f"Documento: {doc.id, doc.ano, doc.unidadegestora, doc.numeracao, doc.assunto, doc.tipoprocesso, doc.locprocesso}")
+        #         pesquisa.rows.append(
                     
-                    ft.DataRow(cells=[
-                        ft.DataCell(ft.Text(doc.id), visible=False), 
-                        ft.DataCell(ft.Text(doc.ano, color=cor, size=15,  on_tap=preencher_campos,)), 
-                        ft.DataCell(ft.Text(doc.unidadegestora, color=cor, size=15)), 
-                        ft.DataCell(ft.Text(doc.numeracao, color=cor, size=15)),
-                        ft.DataCell(ft.Text(doc.assunto, color=cor, size=15)),  
-                        ft.DataCell(ft.Text(doc.tipoprocesso, color=cor, size=15)), 
-                        ft.DataCell(ft.Text(doc.locprocesso, color=cor, size=15)),
-                        ],
-                        color=cores[i%2],
-                        on_select_changed=preencher_campos,
-                        # on_long_press=preencher_campos,
-                        )
-                )
-                # pesquisa.rows.append(linhas)
+        #             ft.DataRow(cells=[
+        #                 ft.DataCell(ft.Text(doc.id), visible=False), 
+        #                 ft.DataCell(ft.Text(doc.ano, color=cor, size=15,  on_tap=preencher_campos,)), 
+        #                 ft.DataCell(ft.Text(doc.unidadegestora, color=cor, size=15)), 
+        #                 ft.DataCell(ft.Text(doc.numeracao, color=cor, size=15)),
+        #                 ft.DataCell(ft.Text(doc.assunto, color=cor, size=15)),  
+        #                 ft.DataCell(ft.Text(doc.tipoprocesso, color=cor, size=15)), 
+        #                 ft.DataCell(ft.Text(doc.locprocesso, color=cor, size=15)),
+        #                 ],
+        #                 color=cores[i%2],
+        #                 on_select_changed=preencher_campos,
+        #                 # on_long_press=preencher_campos,
+        #                 )
+        #         )
+        #         # pesquisa.rows.append(linhas)
         page.update()
     
     rail = ft.NavigationRail(
@@ -179,6 +220,7 @@ def main(page: ft.Page):
     
     campo_pesquisa = ft.TextField(label="Digite o processo", color=cor, visible=True)
     
+    id_atualizar = ft.TextField(label="Digite o Ano do Processo",  color=cor, visible=False)
     ano_atualizar = ft.TextField(label="Digite o Ano do Processo",  color=cor)
     unidadegestora_atualizar = ft.TextField(label="Digite a Unidade Gestora", color=cor, max_length=6)
     numeracao_atualizar = ft.TextField(label="Digite o número do Processo", color=cor)
@@ -262,6 +304,7 @@ def main(page: ft.Page):
             controls=[
                 ft.Row(
                     controls=[
+                        id_atualizar,
                         ano_atualizar,
                         unidadegestora_atualizar,
                     ],
