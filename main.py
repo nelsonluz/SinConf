@@ -7,13 +7,14 @@ def main(page: ft.Page):
     # page.scroll = "always"
     cor = ft.colors.BLACK54
     page.title = "Sistema de Controle de Documentos"
-    page.bgcolor=ft.colors.WHITE
+    # page.bgcolor=ft.colors.WHITE
     
     # page.window_min_width, page.window_max_width = 900, 900
     # page.window_min_height, page.window_max_height = 900, 900
     
     # page.window.width = 200
     # page.window.height = 400
+    page.theme_mode=ft.ThemeMode.LIGHT
     page.theme = ft.Theme(
         color_scheme=ft.ColorScheme(primary=ft.colors.BLACK54),
     )
@@ -192,14 +193,13 @@ def main(page: ft.Page):
             ft.NavigationRailDestination(
                 icon=ft.Icons.BOOK_OUTLINED,
                 selected_icon=ft.Icons.BOOK,
-                label="Cadastrar",
+                label_content=ft.Text("Cadastrar", color=ft.Colors.WHITE),
                 
             ),
             ft.NavigationRailDestination(
                 icon=ft.Icons.NEWSPAPER_OUTLINED,
                 selected_icon=ft.Icons.NEWSPAPER,
-                label="Relatório",
-                
+                label_content=ft.Text("Relatório", color=ft.Colors.WHITE),                
             ),
             # ft.NavigationRailDestination(
             #     icon=ft.Icons.SEARCH_OUTLINED,
