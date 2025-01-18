@@ -41,11 +41,13 @@ def main(page: ft.Page):
         atualizar_conteiner.visible = False
         campo_pesquisa.visible = True
         
+        campo_pesquisa.update()
         page.update()
     
     def preencher_campos(e):
         atualizar_conteiner.visible=True
         campo_pesquisa.visible=False
+        campo_pesquisa.update()
         # print(e.control.cells[0].content.value)
         dooc=Document.get(Document.id==int(e.control.cells[0].content.value))
         id_atualizar.value=dooc.id
@@ -69,9 +71,40 @@ def main(page: ft.Page):
         
         
     def pesquisar(e):
-        print(f"pesquisa {e}")
+        
+        # query = Facility.select().where(Facility.name.contains('tennis'))
+        # print(e.control.value)
+        # for assu in Document.select().where(Document.tipoprocesso.contains(e.control.value)):
+        preencher_datatable(Document.select().where(Document.tipoprocesso.contains(e.control.value)))
+        # for assunto in query:
+            # print(f"Pesquisar --> {assu.ano}")
+        # querys = (Document.select(Document, fn.CONTAINS(Document.assunto)))
+        # for query in querys:
+        #     print(f"pesquisar ---> {query.assunto}")
+        # print(f"pesquisar---> {pesquisa.rows.DataRow.cells[0]}")
+        # for linha in pesquisa.rows:
+        #     datacell = linha.cells[0]
+        #     linha.visible = (
+        #             True
+        #         if 
+        #             e.control.value.lower() in datacell.content.value.lower() 
+        #         else 
+        #             False
+        #     )
+        #     print(f"pesquisar {datacell}")
+        #     linha.update()
+        # print(f"pesquisa {e}")
     
     def apagar(e):
+        atualizacao = Document.delete().where(Document.id==id_atualizar.value)
+        print(f"funcao apagar: {atualizacao}")
+        
+        atualizacao.execute()
+        
+        zeratualizar()
+        campo_pesquisa.value = ""
+        preencher_datatable(Document.select())
+        pesquisa.update()
         print(f"apagar {e}")
     
     def atualizar(e):
@@ -88,14 +121,16 @@ def main(page: ft.Page):
         atualizacao.execute()
         
         zeratualizar()
-        preencher_datatable()
+        campo_pesquisa.value=""
+        preencher_datatable(Document.select())
         pesquisa.update()
     
-    def preencher_datatable():
+    def preencher_datatable(query):
+        print(f"teste {query}")
         cores=[ft.colors.GREEN_50, ft.colors.BLACK45]
         pesquisa.rows.clear()
-        for i, doc in enumerate(Document.select(), 1):
-            print(f"DocumentoXXXXXX: {doc.id, doc.ano, doc.unidadegestora, doc.numeracao, doc.assunto, doc.tipoprocesso, doc.locprocesso}")
+        for i, doc in enumerate(query, 1):
+            # print(f"DocumentoXXXXXX: {doc.id, doc.ano, doc.unidadegestora, doc.numeracao, doc.assunto, doc.tipoprocesso, doc.locprocesso}")
             pesquisa.rows.append(
                 
                 ft.DataRow(cells=[
@@ -113,7 +148,7 @@ def main(page: ft.Page):
                     )
             )
             # pesquisa.rows.append(linhas)
-        # page.update()
+        page.update()
     
     def set_screen(e):
         print(e)
@@ -121,7 +156,7 @@ def main(page: ft.Page):
         # cores=[ft.colors.GREEN_50, ft.colors.BLACK45]
         principal.content=screen_lista[e.control.selected_index]
         if e.control.selected_index == 1:
-            preencher_datatable()
+            preencher_datatable(Document.select())
         #     pesquisa.rows.clear()
         #     for i, doc in enumerate(Document.select(), 1):
         #         print(f"Documento: {doc.id, doc.ano, doc.unidadegestora, doc.numeracao, doc.assunto, doc.tipoprocesso, doc.locprocesso}")
@@ -218,7 +253,7 @@ def main(page: ft.Page):
     tipoprocesso = ft.TextField(label="Digite o tipo do processo", color=cor, width=600)
     locprocesso = ft.TextField(label="Digite o local o processo se encontra - Cx e instalação", color=cor, width=600)
     
-    campo_pesquisa = ft.TextField(label="Digite o processo", color=cor, visible=True)
+    campo_pesquisa = ft.TextField(label="Digite o processo", color=cor, visible=True, on_change=pesquisar)
     
     id_atualizar = ft.TextField(label="Digite o Ano do Processo",  color=cor, visible=False)
     ano_atualizar = ft.TextField(label="Digite o Ano do Processo",  color=cor)
