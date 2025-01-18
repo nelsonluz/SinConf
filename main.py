@@ -7,7 +7,10 @@ def main(page: ft.Page):
     # page.scroll = "always"
     cor = ft.colors.BLACK54
     page.title = "Sistema de Controle de Documentos"
+    # page.scroll=ft.ScrollMode.ADAPTIVE
     # page.bgcolor=ft.colors.WHITE
+    
+    # page.window_height = 900
     
     # page.window_min_width, page.window_max_width = 900, 900
     # page.window_min_height, page.window_max_height = 900, 900
@@ -186,6 +189,7 @@ def main(page: ft.Page):
         selected_index=0,
         label_type=ft.NavigationRailLabelType.ALL,
         min_width=100,
+        # height=580,
         min_extended_width=400,
         leading=ft.FloatingActionButton(icon=ft.Icons.DOCUMENT_SCANNER_OUTLINED, text="CONTROLE \nDOCUMENTOS"),
         group_alignment=0.9,
@@ -333,7 +337,7 @@ def main(page: ft.Page):
     )
     
     atualizar_conteiner = ft.Container(
-        expand=True,
+        # expand=True,
         visible=False,
         content=ft.Column(
             controls=[
@@ -462,7 +466,7 @@ def main(page: ft.Page):
         controls=[
 
             ft.Column(
-                scroll="always",
+                # scroll="always",
                 controls=[
                     ft.Text(
                         "Relatório",
@@ -473,7 +477,13 @@ def main(page: ft.Page):
                     atualizar_conteiner,
                     campo_pesquisa,
                     # botao_pesquisar,
-                    pesquisa,
+                    ft.Container(
+                        expand=True,
+                        content=ft.Column(
+                            controls=[pesquisa],
+                            scroll=ft.ScrollMode.ADAPTIVE,
+                        ),
+                    ),
                 ],
                 spacing=5,
             ),
@@ -485,7 +495,7 @@ def main(page: ft.Page):
     
     principal = ft.Container(
             content=screen_lista[0],
-            # expand=True,        
+            expand=True,        
     )
     
     sidebar_rail_linha=ft.Row(
