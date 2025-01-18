@@ -1,7 +1,11 @@
 from peewee import *
 import peewee
+import os
 
-database = SqliteDatabase('documents.db')
+os.makedirs("assets", exist_ok=True)
+
+
+database = SqliteDatabase('assets/documents.db')
 
 class BaseModel(peewee.Model):
     class Meta:

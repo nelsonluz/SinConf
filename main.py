@@ -495,7 +495,8 @@ def main(page: ft.Page):
     
     principal = ft.Container(
             content=screen_lista[0],
-            expand=True,        
+            expand=True,
+            alignment=ft.alignment.center      
     )
     
     sidebar_rail_linha=ft.Row(
@@ -533,4 +534,4 @@ def main(page: ft.Page):
 
 
 if __name__ == "__main__":
-    ft.app(main)
+    ft.app(main, assets_dir="assets")
