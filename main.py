@@ -26,7 +26,7 @@ def main(page: ft.Page):
     
     def zeravariaveis():
         ano.value = ""
-        unidadegestora.value = ""
+        unidadegestoradown.value = ""
         numeracao.value = ""
         assunto.value = ""
         tipoprocesso.value = ""
@@ -36,7 +36,7 @@ def main(page: ft.Page):
     def zeratualizar():
         id_atualizar.value = ""
         ano_atualizar.value = ""
-        unidadegestora_atualizar.value = ""
+        unidadegestoradown_atualizar.value = ""
         numeracao_atualizar.value = ""
         assunto_atualizar.value = ""
         tipoprocesso_atualizar.value = ""
@@ -56,7 +56,7 @@ def main(page: ft.Page):
         dooc=Document.get(Document.id==int(e.control.cells[0].content.value))
         id_atualizar.value=dooc.id
         ano_atualizar.value=dooc.ano
-        unidadegestora_atualizar.value = dooc.unidadegestora 
+        unidadegestoradown_atualizar.value = dooc.unidadegestora 
         numeracao_atualizar.value = dooc.numeracao
         assunto_atualizar.value = dooc.assunto
         tipoprocesso_atualizar.value = dooc.tipoprocesso
@@ -70,34 +70,18 @@ def main(page: ft.Page):
     def cadastar(e):
         print(f"Cadastro {e}")
         print(f"ano {ano.value}")
-        Document.create(ano=ano.value, unidadegestora=unidadegestora.value, numeracao=numeracao.value, assunto=assunto.value,tipoprocesso=tipoprocesso.value, locprocesso=locprocesso.value)
+        Document.create(ano=ano.value, unidadegestora=unidadegestoradown.value, numeracao=numeracao.value, assunto=assunto.value,tipoprocesso=tipoprocesso.value, locprocesso=locprocesso.value)
         zeravariaveis()
         
         
     def pesquisar(e):
+        preencher_datatable(
+            Document.select().where(
+                Document.tipoprocesso.contains(e.control.value) | 
+                Document.ano.contains(e.control.value)
+                )
+            )
         
-        # query = Facility.select().where(Facility.name.contains('tennis'))
-        # print(e.control.value)
-        # for assu in Document.select().where(Document.tipoprocesso.contains(e.control.value)):
-        preencher_datatable(Document.select().where(Document.tipoprocesso.contains(e.control.value)))
-        # for assunto in query:
-            # print(f"Pesquisar --> {assu.ano}")
-        # querys = (Document.select(Document, fn.CONTAINS(Document.assunto)))
-        # for query in querys:
-        #     print(f"pesquisar ---> {query.assunto}")
-        # print(f"pesquisar---> {pesquisa.rows.DataRow.cells[0]}")
-        # for linha in pesquisa.rows:
-        #     datacell = linha.cells[0]
-        #     linha.visible = (
-        #             True
-        #         if 
-        #             e.control.value.lower() in datacell.content.value.lower() 
-        #         else 
-        #             False
-        #     )
-        #     print(f"pesquisar {datacell}")
-        #     linha.update()
-        # print(f"pesquisa {e}")
     
     def apagar(e):
         atualizacao = Document.delete().where(Document.id==id_atualizar.value)
@@ -114,7 +98,7 @@ def main(page: ft.Page):
     def atualizar(e):
         atualizacao = Document.update({
             Document.ano:ano_atualizar.value,
-            Document.unidadegestora:unidadegestora_atualizar.value,
+            Document.unidadegestora:unidadegestoradown_atualizar.value,
             Document.numeracao:numeracao_atualizar.value,
             Document.assunto:assunto_atualizar.value,
             Document.tipoprocesso:tipoprocesso_atualizar.value,
@@ -249,19 +233,50 @@ def main(page: ft.Page):
         size=25,
         weight="bold",
     )
+ 
+    cabecalho = ft.Container(
+        alignment=ft.alignment.center,
+        # bgcolor=ft.Colors.BLUE_100,
+        padding= 5,
+        bgcolor = ft.Colors.BLUE_900,
+        border_radius = ft.border_radius.all(25),
+        content=ft.Text("HOSPITAL GERAL DE SALVADOR - HGeS", color=cor, size=20, weight="bold"),
+    )
+ 
     
     ano = ft.TextField(label="Digite o Ano do Processo",  color=cor)
-    unidadegestora = ft.TextField(label="Digite a Unidade Gestora", color=cor, max_length=6)
+    # unidadegestora = ft.TextField(label="Digite a Unidade Gestora", color=cor, max_length=6)
+    unidadegestoradown = ft.Dropdown(
+        width=100,
+        options=[
+            ft.dropdown.Option("160039"),
+            ft.dropdown.Option("167039"),
+        ]
+    )
     numeracao = ft.TextField(label="Digite o número do Processo", color=cor)
     assunto = ft.TextField(label="Digite o tipo do processo", color=cor, width=600)
     tipoprocesso = ft.TextField(label="Digite o tipo do processo", color=cor, width=600)
     locprocesso = ft.TextField(label="Digite o local o processo se encontra - Cx e instalação", color=cor, width=600)
     
     campo_pesquisa = ft.TextField(label="Digite o processo", color=cor, visible=True, on_change=pesquisar)
+    campo_pesquisadown = ft.Dropdown(
+        width=100,
+        options=[
+            ft.dropdown.Option("tipoprocesso"),
+            ft.dropdown.Option("167039"),
+        ]
+    )
     
     id_atualizar = ft.TextField(label="Digite o Ano do Processo",  color=cor, visible=False)
     ano_atualizar = ft.TextField(label="Digite o Ano do Processo",  color=cor)
-    unidadegestora_atualizar = ft.TextField(label="Digite a Unidade Gestora", color=cor, max_length=6)
+    # unidadegestora_atualizar = ft.TextField(label="Digite a Unidade Gestora", color=cor, max_length=6)
+    unidadegestoradown_atualizar = ft.Dropdown(
+        width=100,
+        options=[
+            ft.dropdown.Option("160039"),
+            ft.dropdown.Option("167039"),
+        ]
+    )
     numeracao_atualizar = ft.TextField(label="Digite o número do Processo", color=cor)
     assunto_atualizar = ft.TextField(label="Digite o tipo do processo", color=cor, width=600)
     tipoprocesso_atualizar = ft.TextField(label="Digite o tipo do processo", color=cor, width=600)
@@ -273,6 +288,7 @@ def main(page: ft.Page):
         content=ft.Row([
             ft.Column(
                 [
+                    cabecalho,
                     titulo_conteiner,
                     subtitulo_conteiner,
                 ],
@@ -328,7 +344,7 @@ def main(page: ft.Page):
                 ft.DataColumn(ft.Text("Ano", color=cor, size=15)),
                 ft.DataColumn(ft.Text("UG", color=cor, size=15)),
                 ft.DataColumn(ft.Text("Numeração", color=cor, size=15)),
-                ft.DataColumn(ft.Text("TAssunto", color=cor, size=15)),
+                ft.DataColumn(ft.Text("Assunto", color=cor, size=15)),
                 ft.DataColumn(ft.Text("Tipo do Processo", color=cor, size=15)),
                 ft.DataColumn(ft.Text("Localização", color=cor, size=15)),
             ],
@@ -345,7 +361,7 @@ def main(page: ft.Page):
                     controls=[
                         id_atualizar,
                         ano_atualizar,
-                        unidadegestora_atualizar,
+                        unidadegestoradown_atualizar,
                     ],
                 ),
             numeracao_atualizar,
@@ -363,8 +379,7 @@ def main(page: ft.Page):
                     ],
                 )
     
-
-        
+       
     linha1 = ft.Row([
         
         ft.Column(
@@ -396,7 +411,7 @@ def main(page: ft.Page):
                                     color=cor,
                                     size=15,
                                 ),
-                                unidadegestora,
+                                unidadegestoradown,
                             ],
                         ),
                     ],
