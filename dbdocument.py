@@ -19,12 +19,8 @@ class Document(BaseModel):
    assunto = TextField()
    tipoprocesso = TextField()
    locprocesso = TextField()
-#    ano = TextField()
-#    address = TextField()
-#    phone = IntegerField()
-#    class Meta:
-#       database=db
-#       db_table='Documents'
+   dataprotocolo = TextField()
+   secaoprotocolo = TextField()
 
 
 try:

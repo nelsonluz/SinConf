@@ -1,28 +1,20 @@
 from enum import auto
 import flet as ft
+from flet.core.icons import icons
 from dbdocument import Document
 
 
 def main(page: ft.Page):
-    # page.scroll = "always"
     cor = ft.colors.BLACK54
     page.title = "Sistema de Controle de Documentos"
-    # page.scroll=ft.ScrollMode.ADAPTIVE
-    # page.bgcolor=ft.colors.WHITE
-    
-    # page.window_height = 900
-    
-    # page.window_min_width, page.window_max_width = 900, 900
-    # page.window_min_height, page.window_max_height = 900, 900
-    
-    # page.window.width = 200
-    # page.window.height = 400
+
     page.theme_mode=ft.ThemeMode.LIGHT
     page.theme = ft.Theme(
         color_scheme=ft.ColorScheme(primary=ft.colors.BLACK54),
     )
     
-    
+    def sair(e):
+        page.window.close()
     
     def zeravariaveis():
         ano.value = ""
@@ -41,6 +33,8 @@ def main(page: ft.Page):
         assunto_atualizar.value = ""
         tipoprocesso_atualizar.value = ""
         locprocesso_atualizar.value = ""
+        dataprotocolo_atualizar.value=""
+        secaoprotocolo_atualizar.value= ""
         
         atualizar_conteiner.visible = False
         campo_pesquisa.visible = True
@@ -61,16 +55,18 @@ def main(page: ft.Page):
         assunto_atualizar.value = dooc.assunto
         tipoprocesso_atualizar.value = dooc.tipoprocesso
         locprocesso_atualizar.value = dooc.locprocesso
+        dataprotocolo_atualizar.value = dooc.dataprotocolo
+        secaoprotocolo_atualizar.value = dooc.secaoprotocolo
         # print(dooc.ano)
         atualizar_conteiner.update()
     
     def cancelar(e):
         zeratualizar()
         
-    def cadastar(e):
+    def cadastrar(e):
         print(f"Cadastro {e}")
         print(f"ano {ano.value}")
-        Document.create(ano=ano.value, unidadegestora=unidadegestoradown.value, numeracao=numeracao.value, assunto=assunto.value,tipoprocesso=tipoprocesso.value, locprocesso=locprocesso.value)
+        Document.create(ano=ano.value, unidadegestora=unidadegestoradown.value, numeracao=numeracao.value, assunto=assunto.value,tipoprocesso=tipoprocesso.value, locprocesso=locprocesso.value, dataprotocolo="", secaoprotocolo="")
         zeravariaveis()
         
         
@@ -103,6 +99,8 @@ def main(page: ft.Page):
             Document.assunto:assunto_atualizar.value,
             Document.tipoprocesso:tipoprocesso_atualizar.value,
             Document.locprocesso:locprocesso_atualizar.value,
+            Document.dataprotocolo:dataprotocolo_atualizar.value,
+            Document.secaoprotocolo:secaoprotocolo_atualizar.value,
             }).where(Document.id==id_atualizar.value)
         print(f"funcao atualizar: {atualizacao}")
         
@@ -129,6 +127,8 @@ def main(page: ft.Page):
                     ft.DataCell(ft.Text(doc.assunto, color=cor, size=15)),  
                     ft.DataCell(ft.Text(doc.tipoprocesso, color=cor, size=15)), 
                     ft.DataCell(ft.Text(doc.locprocesso, color=cor, size=15)),
+                    ft.DataCell(ft.Text(doc.dataprotocolo, color=cor, size=15)),
+                    ft.DataCell(ft.Text(doc.secaoprotocolo, color=cor, size=15)),
                     ],
                     color=cores[i%2],
                     on_select_changed=preencher_campos,
@@ -139,32 +139,10 @@ def main(page: ft.Page):
         page.update()
     
     def set_screen(e):
-        print(e)
-        # cores=["#759DCB", "#DABD90"]
-        # cores=[ft.colors.GREEN_50, ft.colors.BLACK45]
+        # print(e)
         principal.content=screen_lista[e.control.selected_index]
         if e.control.selected_index == 1:
             preencher_datatable(Document.select())
-        #     pesquisa.rows.clear()
-        #     for i, doc in enumerate(Document.select(), 1):
-        #         print(f"Documento: {doc.id, doc.ano, doc.unidadegestora, doc.numeracao, doc.assunto, doc.tipoprocesso, doc.locprocesso}")
-        #         pesquisa.rows.append(
-                    
-        #             ft.DataRow(cells=[
-        #                 ft.DataCell(ft.Text(doc.id), visible=False), 
-        #                 ft.DataCell(ft.Text(doc.ano, color=cor, size=15,  on_tap=preencher_campos,)), 
-        #                 ft.DataCell(ft.Text(doc.unidadegestora, color=cor, size=15)), 
-        #                 ft.DataCell(ft.Text(doc.numeracao, color=cor, size=15)),
-        #                 ft.DataCell(ft.Text(doc.assunto, color=cor, size=15)),  
-        #                 ft.DataCell(ft.Text(doc.tipoprocesso, color=cor, size=15)), 
-        #                 ft.DataCell(ft.Text(doc.locprocesso, color=cor, size=15)),
-        #                 ],
-        #                 color=cores[i%2],
-        #                 on_select_changed=preencher_campos,
-        #                 # on_long_press=preencher_campos,
-        #                 )
-        #         )
-        #         # pesquisa.rows.append(linhas)
         page.update()
     
     rail = ft.NavigationRail(
@@ -190,9 +168,9 @@ def main(page: ft.Page):
                 label_content=ft.Text("Relatório", color=ft.Colors.WHITE),                
             ),
             # ft.NavigationRailDestination(
-            #     icon=ft.Icons.SEARCH_OUTLINED,
-            #     selected_icon=ft.Icons.SEARCH,
-            #     label="Pesquisa",
+            #     icon=ft.Icons.CLOSE_FULLSCREEN_OUTLINED,
+            #     selected_icon=ft.Icons.CLOSE_FULLSCREEN,
+            #     label_content=ft.Text("Sair", color=ft.Colors.WHITE),
                 
             # ),
         ],
@@ -259,19 +237,27 @@ def main(page: ft.Page):
     locprocesso = ft.TextField(label="Digite o local o processo se encontra - Cx e instalação", color=cor, width=600)
     
     campo_pesquisa = ft.TextField(label="Digite o processo", color=cor, visible=True, on_change=pesquisar)
-    campo_pesquisadown = ft.Dropdown(
-        width=100,
-        options=[
-            ft.dropdown.Option("tipoprocesso"),
-            ft.dropdown.Option("167039"),
-        ]
-    )
+    
+    botao_sair = ft.IconButton(
+                    icon=ft.Icons.CLOSE_FULLSCREEN,
+                    icon_color=ft.Colors.RED_400,
+                    icon_size=20,
+                    tooltip="Sair",
+                    on_click=sair,
+                )
+    # campo_pesquisadown = ft.Dropdown(
+    #     width=100,
+    #     options=[
+    #         ft.dropdown.Option("tipoprocesso"),
+    #         ft.dropdown.Option("167039"),
+    #     ]
+    # )
     
     id_atualizar = ft.TextField(label="Digite o Ano do Processo",  color=cor, visible=False)
     ano_atualizar = ft.TextField(label="Digite o Ano do Processo",  color=cor)
     # unidadegestora_atualizar = ft.TextField(label="Digite a Unidade Gestora", color=cor, max_length=6)
     unidadegestoradown_atualizar = ft.Dropdown(
-        width=100,
+        width=200,
         options=[
             ft.dropdown.Option("160039"),
             ft.dropdown.Option("167039"),
@@ -281,38 +267,49 @@ def main(page: ft.Page):
     assunto_atualizar = ft.TextField(label="Digite o tipo do processo", color=cor, width=600)
     tipoprocesso_atualizar = ft.TextField(label="Digite o tipo do processo", color=cor, width=600)
     locprocesso_atualizar = ft.TextField(label="Digite o local o processo se encontra - Cx e instalação", color=cor, width=600)
+    dataprotocolo_atualizar = ft.TextField(label="dd/mm/YYYY", keyboard_type = ft.KeyboardType.DATETIME,  color=cor, width=600)
+    secaoprotocolo_atualizar = ft.TextField(label="Digite a seção que o doc será protocolado", color=cor, width=600)
     
+    
+    linha_protocolo = ft.Row(
+        [
+            dataprotocolo_atualizar,
+            secaoprotocolo_atualizar,
+        ],
+        
+    )
     
     linha_conteiner = ft.Container(
         # expand=True,
         content=ft.Row([
             ft.Column(
                 [
-                    cabecalho,
+                    # cabecalho,
                     titulo_conteiner,
                     subtitulo_conteiner,
                 ],
-                alignment=ft.MainAxisAlignment.CENTER,
+                # alignment=ft.MainAxisAlignment.CENTER,
             ),
         # margin=ft.margin.only(left=300),
         ],
         alignment=ft.MainAxisAlignment.CENTER,               
         ),
+        
     )
  
     botao_cadastrar = ft.FilledButton(
                             "Cadastrar", 
                             icon=ft.Icons.ADD,
-                            bgcolor=ft.Colors.BLUE_100,
+                            bgcolor=ft.Colors.BLUE_500,
                             # size=20,
                             # padding=15,
-                            on_click= cadastar,
+                            on_click= cadastrar,
                         )
  
     botao_atualizar = ft.FilledButton(
                             "Atualizar", 
                             icon=ft.Icons.UPDATE,
-                            bgcolor=ft.colors.BLUE_100,
+                            bgcolor=ft.colors.BLUE_500,
                             # size=20,
                             # padding=15,
                             on_click= atualizar,
@@ -321,7 +318,7 @@ def main(page: ft.Page):
     botao_apagar = ft.FilledButton(
                     "Apagar", 
                     icon=ft.Icons.DELETE,
-                    bgcolor=ft.colors.BLUE_100,
+                    bgcolor=ft.colors.RED_500,
                     # size=20,
                     # padding=15,
                     on_click= apagar,
@@ -330,7 +327,7 @@ def main(page: ft.Page):
     botao_cancelar = ft.FilledButton(
                     "Cancelar", 
                     icon=ft.Icons.CANCEL_OUTLINED,
-                    bgcolor=ft.colors.BLUE_100,
+                    bgcolor=ft.colors.BLACK26,
                     # size=20,
                     # padding=15,
                     on_click= cancelar,
@@ -347,6 +344,8 @@ def main(page: ft.Page):
                 ft.DataColumn(ft.Text("Assunto", color=cor, size=15)),
                 ft.DataColumn(ft.Text("Tipo do Processo", color=cor, size=15)),
                 ft.DataColumn(ft.Text("Localização", color=cor, size=15)),
+                ft.DataColumn(ft.Text("Data Protocolo", color=cor, size=15)),
+                ft.DataColumn(ft.Text("Seção Protocolo", color=cor, size=15)),
             ],
             rows=[],
             expand=True,
@@ -368,15 +367,24 @@ def main(page: ft.Page):
             assunto_atualizar,
             tipoprocesso_atualizar,
             locprocesso_atualizar,
-                ft.Row(controls=[botao_atualizar, botao_apagar, botao_cancelar])
+            linha_protocolo,
+            ft.Row(controls=[botao_atualizar, botao_apagar, botao_cancelar])
             ],
+            
         ),
     )
     
     linha_titulo = ft.Row(
-                    controls = [
-                        titulo_processo,
-                    ],
+                        controls = [
+                            titulo_processo,
+                            ft.Column(
+                                [
+                                    # ft.Text("Sair", color=cor, size=15),
+                                    botao_sair,
+                                ],
+                                # spacing=5
+                            ),
+                        ],
                 )
     
        
