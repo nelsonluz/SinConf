@@ -69,7 +69,10 @@ def main(page: ft.Page):
         Document.create(ano=ano.value, unidadegestora=unidadegestoradown.value, numeracao=numeracao.value, assunto=assunto.value,tipoprocesso=tipoprocesso.value, locprocesso=locprocesso.value, dataprotocolo="", secaoprotocolo="")
         zeravariaveis()
         
+    def imprimir(e):
+        print(f"Funcao Imprimir: {ano_atualizar.value}, {unidadegestoradown_atualizar.value}, {numeracao_atualizar.value}, {assunto_atualizar.value}, {tipoprocesso_atualizar.value}, {locprocesso_atualizar.value}, {dataprotocolo_atualizar.value}, {secaoprotocolo_atualizar.value} ")
         
+            
     def pesquisar(e):
         preencher_datatable(
             Document.select().where(
@@ -238,13 +241,15 @@ def main(page: ft.Page):
     
     campo_pesquisa = ft.TextField(label="Digite o processo", color=cor, visible=True, on_change=pesquisar)
     
-    botao_sair = ft.IconButton(
-                    icon=ft.Icons.CLOSE_FULLSCREEN,
-                    icon_color=ft.Colors.RED_400,
-                    icon_size=20,
-                    tooltip="Sair",
-                    on_click=sair,
-                )
+    
+ 
+    # botao_sair = ft.IconButton(
+    #                 icon=ft.Icons.CLOSE_FULLSCREEN,
+    #                 icon_color=ft.Colors.RED_400,
+    #                 icon_size=20,
+    #                 tooltip="Sair",
+    #                 on_click=sair,
+    #             )
     # campo_pesquisadown = ft.Dropdown(
     #     width=100,
     #     options=[
@@ -297,6 +302,15 @@ def main(page: ft.Page):
         
     )
  
+    botao_sair = ft.FilledButton(
+                    "Sair", 
+                    icon=ft.Icons.CLOSE_FULLSCREEN,
+                    bgcolor=ft.colors.RED_500,
+                    # size=20,
+                    # padding=15,
+                    on_click= sair,
+                )
+    
     botao_cadastrar = ft.FilledButton(
                             "Cadastrar", 
                             icon=ft.Icons.ADD,
@@ -322,6 +336,15 @@ def main(page: ft.Page):
                     # size=20,
                     # padding=15,
                     on_click= apagar,
+                )
+
+    botao_imprimir = ft.FilledButton(
+                    "Imprimir", 
+                    icon=ft.Icons.PRINT,
+                    bgcolor=ft.colors.AMBER_500,
+                    # size=20,
+                    # padding=15,
+                    on_click= imprimir,
                 )
     
     botao_cancelar = ft.FilledButton(
@@ -368,7 +391,7 @@ def main(page: ft.Page):
             tipoprocesso_atualizar,
             locprocesso_atualizar,
             linha_protocolo,
-            ft.Row(controls=[botao_atualizar, botao_apagar, botao_cancelar])
+            ft.Row(controls=[botao_atualizar, botao_apagar, botao_imprimir, botao_cancelar])
             ],
             
         ),
