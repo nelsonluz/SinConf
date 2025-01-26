@@ -59,7 +59,7 @@ class Protocolo:
         
         cabecalho_style = styles["Heading1"]
         cabecalho_style.alignment = TA_CENTER
-        cabecalho_style.fontSize = 48
+        cabecalho_style.fontSize = 30
         cabecalho_style.spaceAfter = 50
         
         assinatura_style = styles["BodyText"]
@@ -77,7 +77,7 @@ class Protocolo:
         
         flowables = []
         
-        cabecalho = Paragraph("Conformidade", cabecalho_style)
+        cabecalho = Paragraph("Conformidade - HGes", cabecalho_style)
         paragraph_1 = Paragraph("PROTOCOLO DE RECEBIMENTO DE DOCUMENTOS", headline_style)
         paragraph_2 = Paragraph(
             "Data do Recebimento:  " + self.dataprotocolo,
