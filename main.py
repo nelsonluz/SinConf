@@ -1,7 +1,6 @@
-from enum import auto
 import flet as ft
-from flet.core.icons import icons
 from dbdocument import Document
+from protocolo import Protocolo
 
 
 def main(page: ft.Page):
@@ -37,14 +36,18 @@ def main(page: ft.Page):
         secaoprotocolo_atualizar.value= ""
         
         atualizar_conteiner.visible = False
+        radio_pesquisa.visible = True
         campo_pesquisa.visible = True
         
         campo_pesquisa.update()
+        radio_pesquisa.update()
         page.update()
     
     def preencher_campos(e):
         atualizar_conteiner.visible=True
+        radio_pesquisa.visible=False
         campo_pesquisa.visible=False
+        radio_pesquisa.update()
         campo_pesquisa.update()
         # print(e.control.cells[0].content.value)
         dooc=Document.get(Document.id==int(e.control.cells[0].content.value))
@@ -70,16 +73,45 @@ def main(page: ft.Page):
         zeravariaveis()
         
     def imprimir(e):
+        printed = Protocolo(ano_atualizar.value,unidadegestoradown_atualizar.value, numeracao_atualizar.value, assunto_atualizar.value, tipoprocesso_atualizar.value, locprocesso_atualizar.value, dataprotocolo_atualizar.value, secaoprotocolo_atualizar.value)
+        printed.cria_pdf()
         print(f"Funcao Imprimir: {ano_atualizar.value}, {unidadegestoradown_atualizar.value}, {numeracao_atualizar.value}, {assunto_atualizar.value}, {tipoprocesso_atualizar.value}, {locprocesso_atualizar.value}, {dataprotocolo_atualizar.value}, {secaoprotocolo_atualizar.value} ")
+        zeratualizar()
         
-            
+    def criar_pesquisa(e):
+        saida_radio.value = e.control.value
+        page.update()
+                
     def pesquisar(e):
-        preencher_datatable(
-            Document.select().where(
-                Document.tipoprocesso.contains(e.control.value) | 
+        if saida_radio.value == "ano":
+            preencher_datatable(Document.select().where(
                 Document.ano.contains(e.control.value)
                 )
             )
+        elif saida_radio.value == "assunto":
+            preencher_datatable(Document.select().where(
+                Document.assunto.contains(e.control.value)
+                )
+            )
+        elif saida_radio.value == "processo":
+            preencher_datatable(Document.select().where(
+                Document.tipoprocesso.contains(e.control.value)
+                )
+            )
+        elif saida_radio.value == "UG":
+            preencher_datatable(Document.select().where(
+                Document.unidadegestora.contains(e.control.value)
+                )
+            )
+        #     print(f"pesquisa {saida_radio.value}")
+        # preencher_datatable(
+        
+        #     Document.select().where(
+        #         Document.tipoprocesso.contains(e.control.value) | 
+        #         Document.ano.contains(e.control.value)
+        #         )
+        #     )
+        # page.update()
         
     
     def apagar(e):
@@ -228,35 +260,27 @@ def main(page: ft.Page):
     ano = ft.TextField(label="Digite o Ano do Processo",  color=cor)
     # unidadegestora = ft.TextField(label="Digite a Unidade Gestora", color=cor, max_length=6)
     unidadegestoradown = ft.Dropdown(
-        width=100,
+        width=200,
         options=[
             ft.dropdown.Option("160039"),
             ft.dropdown.Option("167039"),
         ]
     )
     numeracao = ft.TextField(label="Digite o número do Processo", color=cor)
-    assunto = ft.TextField(label="Digite o tipo do processo", color=cor, width=600)
+    assunto = ft.TextField(label="Digite o assunto do processo", color=cor, width=600)
     tipoprocesso = ft.TextField(label="Digite o tipo do processo", color=cor, width=600)
     locprocesso = ft.TextField(label="Digite o local o processo se encontra - Cx e instalação", color=cor, width=600)
     
+    radio_pesquisa = ft.RadioGroup(content=ft.Row([
+                        ft.Radio(value="ano", label="Ano"),
+                        ft.Radio(value="UG", label="Unidade Gestora"),
+                        ft.Radio(value="assunto", label="Assunto"),
+                        ft.Radio(value="processo", label="Tipo de Processo"),
+                        ]), on_change=criar_pesquisa
+                    )
+    saida_radio = ft.Text("assunto")
     campo_pesquisa = ft.TextField(label="Digite o processo", color=cor, visible=True, on_change=pesquisar)
     
-    
- 
-    # botao_sair = ft.IconButton(
-    #                 icon=ft.Icons.CLOSE_FULLSCREEN,
-    #                 icon_color=ft.Colors.RED_400,
-    #                 icon_size=20,
-    #                 tooltip="Sair",
-    #                 on_click=sair,
-    #             )
-    # campo_pesquisadown = ft.Dropdown(
-    #     width=100,
-    #     options=[
-    #         ft.dropdown.Option("tipoprocesso"),
-    #         ft.dropdown.Option("167039"),
-    #     ]
-    # )
     
     id_atualizar = ft.TextField(label="Digite o Ano do Processo",  color=cor, visible=False)
     ano_atualizar = ft.TextField(label="Digite o Ano do Processo",  color=cor)
@@ -269,11 +293,11 @@ def main(page: ft.Page):
         ]
     )
     numeracao_atualizar = ft.TextField(label="Digite o número do Processo", color=cor)
-    assunto_atualizar = ft.TextField(label="Digite o tipo do processo", color=cor, width=600)
+    assunto_atualizar = ft.TextField(label="Digite o assunto do processo", color=cor, width=600)
     tipoprocesso_atualizar = ft.TextField(label="Digite o tipo do processo", color=cor, width=600)
     locprocesso_atualizar = ft.TextField(label="Digite o local o processo se encontra - Cx e instalação", color=cor, width=600)
-    dataprotocolo_atualizar = ft.TextField(label="dd/mm/YYYY", keyboard_type = ft.KeyboardType.DATETIME,  color=cor, width=600)
-    secaoprotocolo_atualizar = ft.TextField(label="Digite a seção que o doc será protocolado", color=cor, width=600)
+    dataprotocolo_atualizar = ft.TextField(label="dd/mm/YYYY", keyboard_type = ft.KeyboardType.DATETIME,  color=cor, width=200)
+    secaoprotocolo_atualizar = ft.TextField(label="Digite a seção que o doc será protocolado", color=cor, width=390)
     
     
     linha_protocolo = ft.Row(
@@ -521,6 +545,7 @@ def main(page: ft.Page):
                         weight="bold",
                     ),
                     atualizar_conteiner,
+                    radio_pesquisa,
                     campo_pesquisa,
                     # botao_pesquisar,
                     ft.Container(
