@@ -1,3 +1,4 @@
+from re import I
 import flet as ft
 from dbdocument import Document
 from protocolo import Protocolo
@@ -101,6 +102,11 @@ def main(page: ft.Page):
         elif saida_radio.value == "UG":
             preencher_datatable(Document.select().where(
                 Document.unidadegestora.contains(e.control.value)
+                )
+            )
+        elif saida_radio.value == "locprocesso":
+            preencher_datatable(Document.select().where(
+                Document.locprocesso.contains(e.control.value)
                 )
             )
         #     print(f"pesquisa {saida_radio.value}")
@@ -213,14 +219,14 @@ def main(page: ft.Page):
     )
     
     titulo = "Sistema de Controle de Documentos"
-    subtitulo = "Conformidade"
+    subtitulo = "CONFORMIDADE"
     titulo_conteiner = ft.Container(
         content = ft.Text(titulo,
                     size=20,
                     color=cor,
                     weight="bold",
                 ),
-        bgcolor = ft.Colors.BLUE_900,
+        bgcolor = ft.Colors.BLACK12,
         border_radius = ft.border_radius.all(25),
         padding = 15,
         # alignment=ft.MainAxisAlignment.CENTER,
@@ -236,7 +242,7 @@ def main(page: ft.Page):
         # width=150,
         # height=150,
         padding= 15,
-        bgcolor = ft.Colors.BLUE_900,
+        bgcolor = ft.Colors.BLACK12,
         border_radius = ft.border_radius.all(25),
         # padding = 5
     )
@@ -251,7 +257,7 @@ def main(page: ft.Page):
         alignment=ft.alignment.center,
         # bgcolor=ft.Colors.BLUE_100,
         padding= 5,
-        bgcolor = ft.Colors.BLUE_900,
+        bgcolor = ft.Colors.BLACK12,
         border_radius = ft.border_radius.all(25),
         content=ft.Text("HOSPITAL GERAL DE SALVADOR - HGeS", color=cor, size=20, weight="bold"),
     )
@@ -276,6 +282,7 @@ def main(page: ft.Page):
                         ft.Radio(value="UG", label="Unidade Gestora"),
                         ft.Radio(value="assunto", label="Assunto"),
                         ft.Radio(value="processo", label="Tipo de Processo"),
+                        ft.Radio(value="locprocesso", label="localização do Processo"),
                         ]), on_change=criar_pesquisa
                     )
     saida_radio = ft.Text("assunto")
@@ -299,6 +306,21 @@ def main(page: ft.Page):
     dataprotocolo_atualizar = ft.TextField(label="dd/mm/YYYY", keyboard_type = ft.KeyboardType.DATETIME,  color=cor, width=200)
     secaoprotocolo_atualizar = ft.TextField(label="Digite a seção que o doc será protocolado", color=cor, width=390)
     
+    # img = ft.Image(
+    #     src="logohges.png",
+    #     width=100,
+    #     height=100,
+    #     fit=ft.ImageFit.NONE,
+    # )
+    
+    a1 = ft.CircleAvatar( foreground_image_src="runnergame72.png", content=ft.Text("autor"), width=40, height=40)
+    
+    imagem = ft.Container(
+        a1,
+        width=20,
+        height=20,
+        alignment=ft.alignment.top_left
+        )
     
     linha_protocolo = ft.Row(
         [
@@ -313,9 +335,9 @@ def main(page: ft.Page):
         content=ft.Row([
             ft.Column(
                 [
-                    # cabecalho,
-                    titulo_conteiner,
+                    cabecalho,
                     subtitulo_conteiner,
+                    titulo_conteiner,
                 ],
                 # alignment=ft.MainAxisAlignment.CENTER,
             ),
@@ -591,6 +613,7 @@ def main(page: ft.Page):
             linha_conteiner,
             linha_titulo,
             sidebar_rail_linha,
+            ft.Row(controls=[imagem, ft.Text("by Nelson Luz", color=cor, size=7, )]),
             # ft.Container(
             #     content=ft.ElevatedButton("Page theme button"),
             #     bgcolor=ft.Colors.ON_SURFACE_VARIANT,
