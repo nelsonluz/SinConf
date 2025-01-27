@@ -446,13 +446,13 @@ def main(page: ft.Page):
     linha_titulo = ft.Row(
                         controls = [
                             titulo_processo,
-                            ft.Column(
-                                [
-                                    # ft.Text("Sair", color=cor, size=15),
-                                    botao_sair,
-                                ],
-                                # spacing=5
-                            ),
+                            # ft.Column(
+                            #     [
+                            #         # ft.Text("Sair", color=cor, size=15),
+                            #         botao_sair,
+                            #     ],
+                            #     # spacing=5
+                            # ),
                         ],
                 )
     
@@ -613,7 +613,7 @@ def main(page: ft.Page):
             linha_conteiner,
             linha_titulo,
             sidebar_rail_linha,
-            ft.Row(controls=[imagem, ft.Text("by Nelson Luz", color=cor, size=7, )]),
+            ft.Row(controls=[imagem, ft.Text("by Nelson Luz", color=cor, size=7,), ft.VerticalDivider(width=1), botao_sair]),
             # ft.Container(
             #     content=ft.ElevatedButton("Page theme button"),
             #     bgcolor=ft.Colors.ON_SURFACE_VARIANT,
