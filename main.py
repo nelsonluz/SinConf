@@ -317,9 +317,10 @@ def main(page: ft.Page):
     
     imagem = ft.Container(
         a1,
-        width=20,
-        height=20,
-        alignment=ft.alignment.top_left
+        width=10,
+        height=10,
+        alignment=ft.alignment.top_left,
+        border_radius=5
         )
     
     linha_protocolo = ft.Row(
