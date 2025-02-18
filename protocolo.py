@@ -7,6 +7,10 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER, TA_RIGHT
 from reportlab.lib import colors
 
+import os
+
+os.makedirs("Protocolo", exist_ok=True)
+
 
 
 class Protocolo:
@@ -48,7 +52,7 @@ class Protocolo:
         
         
         # impressao.save()
-        impre = SimpleDocTemplate('assets/protocolo.pdf')
+        impre = SimpleDocTemplate('Protocolo/protocolo.pdf')
         # self.desenharRef(impre)
         # sample_style_sheet = getSampleStyleSheet()
         styles = getSampleStyleSheet()
