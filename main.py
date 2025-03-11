@@ -1,5 +1,6 @@
 from re import I
 import flet as ft
+from flet.core.grid_view import ScrollableControl
 from dbdocument import Document
 from protocolo import Protocolo
 
@@ -175,9 +176,9 @@ def main(page: ft.Page):
                     ft.DataCell(ft.Text(doc.ano, color=cor, size=15,  on_tap=preencher_campos,)), 
                     ft.DataCell(ft.Text(doc.unidadegestora, color=cor, size=15)), 
                     ft.DataCell(ft.Text(doc.numeracao, color=cor, size=15)),
-                    ft.DataCell(ft.Text(doc.assunto, color=cor, size=15)),  
-                    ft.DataCell(ft.Text(doc.tipoprocesso, color=cor, size=15)), 
-                    ft.DataCell(ft.Text(doc.locprocesso, color=cor, size=15)),
+                    ft.DataCell(ft.Container(content=ft.Column(controls=[ft.Text(doc.assunto, color=cor, size=15),], scroll=ft.ScrollMode.ALWAYS), width=200)),  
+                    ft.DataCell(ft.Container(content=ft.Column(controls=[ft.Text(doc.tipoprocesso, color=cor, size=15),], scroll=ft.ScrollMode.ALWAYS), width=200)), 
+                    ft.DataCell(ft.Container(content=ft.Column(controls=[ft.Text(doc.locprocesso, color=cor, size=15),], scroll=ft.ScrollMode.ALWAYS), width=150)),
                     ft.DataCell(ft.Text(doc.dataprotocolo, color=cor, size=15)),
                     ft.DataCell(ft.Text(doc.secaoprotocolo, color=cor, size=15)),
                     ],
@@ -296,7 +297,7 @@ def main(page: ft.Page):
                         ft.Radio(value="locprocesso", label="localização do Processo"),
                         ]), on_change=criar_pesquisa
                     )
-    saida_radio = ft.Text("assunto")
+    saida_radio = ft.Text("ano")
     campo_pesquisa = ft.TextField(label="Digite o processo", color=cor, visible=True, on_change=pesquisar)
     
     
@@ -567,6 +568,7 @@ def main(page: ft.Page):
                 ],
             ),
         ],
+        # scroll=ft.ScrollMode.ALWAYS,
     )
 
     linha3 = ft.Row(
@@ -587,16 +589,24 @@ def main(page: ft.Page):
                     # botao_pesquisar,
                     ft.Container(
                         expand=True,
-                        content=ft.Column(
-                            controls=[pesquisa],
-                            scroll=ft.ScrollMode.ADAPTIVE,
+                        content=ft.Row(
+                            [ft.Column(
+                                controls=[pesquisa],
+                                # scroll=ft.ScrollMode.ADAPTIVE,
+                                scroll=ft.ScrollMode.ALWAYS #,expand=1,horizontal_alignment=ft.CrossAxisAlignment.START 
+                            ),
+                        ],
+                        scroll=ft.ScrollMode.ALWAYS,expand=1,vertical_alignment=ft.CrossAxisAlignment.START
                         ),
+                        width=1090,
+                        height=700,
                     ),
                 ],
                 spacing=5,
             ),
         ],
         alignment=ft.MainAxisAlignment.CENTER,
+        # scroll=ft.ScrollMode.ALWAYS,
     )
     
     screen_lista= [linha1, linha3, linha2]
@@ -613,12 +623,12 @@ def main(page: ft.Page):
             rail,
             ft.VerticalDivider(width=1),
             ft.Column(
-                [  
-                    # principal, 
-                    principal,
-                    # botao_cadastrar,
-                ],
-            ),
+                    [  
+                        # principal, 
+                        principal,
+                        # botao_cadastrar,
+                    ],
+            )
         ],
         expand=True,
     )

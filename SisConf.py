@@ -297,7 +297,7 @@ def main(page: ft.Page):
                         ft.Radio(value="locprocesso", label="localização do Processo"),
                         ]), on_change=criar_pesquisa
                     )
-    saida_radio = ft.Text("assunto")
+    saida_radio = ft.Text("ano")
     campo_pesquisa = ft.TextField(label="Digite o processo", color=cor, visible=True, on_change=pesquisar)
     
     
@@ -592,11 +592,14 @@ def main(page: ft.Page):
                         content=ft.Row(
                             [ft.Column(
                                 controls=[pesquisa],
-                                scroll=ft.ScrollMode.ADAPTIVE,
+                                # scroll=ft.ScrollMode.ADAPTIVE,
+                                scroll=ft.ScrollMode.ALWAYS #,expand=1,horizontal_alignment=ft.CrossAxisAlignment.START 
                             ),
                         ],
                         scroll=ft.ScrollMode.ALWAYS,expand=1,vertical_alignment=ft.CrossAxisAlignment.START
-                        )
+                        ),
+                        width=1090,
+                        height=700,
                     ),
                 ],
                 spacing=5,
@@ -620,12 +623,12 @@ def main(page: ft.Page):
             rail,
             ft.VerticalDivider(width=1),
             ft.Column(
-                [  
-                    # principal, 
-                    principal,
-                    # botao_cadastrar,
-                ],
-            ),
+                    [  
+                        # principal, 
+                        principal,
+                        # botao_cadastrar,
+                    ],
+            )
         ],
         expand=True,
     )
