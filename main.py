@@ -55,7 +55,6 @@ def main(page: ft.Page):
         campo_pesquisa.visible=False
         radio_pesquisa.update()
         campo_pesquisa.update()
-        # print(e.control.cells[0].content.value)
         dooc=Document.get(Document.id==int(e.control.cells[0].content.value))
         id_atualizar.value=dooc.id
         ano_atualizar.value=dooc.ano
@@ -66,7 +65,6 @@ def main(page: ft.Page):
         locprocesso_atualizar.value = dooc.locprocesso
         dataprotocolo_atualizar.value = dooc.dataprotocolo
         secaoprotocolo_atualizar.value = dooc.secaoprotocolo
-        # print(dooc.ano)
         atualizar_conteiner.update()
     
     def cancelar(e):
@@ -119,17 +117,7 @@ def main(page: ft.Page):
                 Document.numeracao.contains(e.control.value)
                 )
             )
-        
-        #     print(f"pesquisa {saida_radio.value}")
-        # preencher_datatable(
-        
-        #     Document.select().where(
-        #         Document.tipoprocesso.contains(e.control.value) | 
-        #         Document.ano.contains(e.control.value)
-        #         )
-        #     )
-        # page.update()
-        
+       
     
     def apagar(e):
         atualizacao = Document.delete().where(Document.id==id_atualizar.value)
@@ -164,11 +152,9 @@ def main(page: ft.Page):
         pesquisa.update()
     
     def preencher_datatable(query):
-        # print(f"teste {query}")
         cores=[ft.colors.GREEN_50, ft.colors.BLACK45]
         pesquisa.rows.clear()
         for i, doc in enumerate(query, 1):
-            # print(f"DocumentoXXXXXX: {doc.id, doc.ano, doc.unidadegestora, doc.numeracao, doc.assunto, doc.tipoprocesso, doc.locprocesso}")
             pesquisa.rows.append(
                 
                 ft.DataRow(cells=[
@@ -184,26 +170,21 @@ def main(page: ft.Page):
                     ],
                     color=cores[i%2],
                     on_select_changed=preencher_campos,
-                    # on_long_press=preencher_campos,
                     )
             )
-            # pesquisa.rows.append(linhas)
         page.update()
     
     def set_screen(e):
-        # print(e)
         principal.content=screen_lista[e.control.selected_index]
         if e.control.selected_index == 1:
             preencher_datatable(Document.select())
         page.update()
     
     rail = ft.NavigationRail(
-        # expand=True,
         bgcolor=ft.colors.BLACK,
         selected_index=0,
         label_type=ft.NavigationRailLabelType.ALL,
         min_width=100,
-        # height=580,
         min_extended_width=400,
         leading=ft.FloatingActionButton(icon=ft.Icons.DOCUMENT_SCANNER_OUTLINED, text="CONTROLE \nDOCUMENTOS"),
         group_alignment=0.9,
@@ -219,12 +200,6 @@ def main(page: ft.Page):
                 selected_icon=ft.Icons.NEWSPAPER,
                 label_content=ft.Text("Relatório", color=ft.Colors.WHITE),                
             ),
-            # ft.NavigationRailDestination(
-            #     icon=ft.Icons.CLOSE_FULLSCREEN_OUTLINED,
-            #     selected_icon=ft.Icons.CLOSE_FULLSCREEN,
-            #     label_content=ft.Text("Sair", color=ft.Colors.WHITE),
-                
-            # ),
         ],
         on_change=set_screen,  
     )
@@ -240,7 +215,6 @@ def main(page: ft.Page):
         bgcolor = ft.Colors.BLACK12,
         border_radius = ft.border_radius.all(25),
         padding = 15,
-        # alignment=ft.MainAxisAlignment.CENTER,
     )
     subtitulo_conteiner = ft.Container(
         content = ft.Text(subtitulo,
@@ -248,14 +222,10 @@ def main(page: ft.Page):
                     color=cor,
                     weight="bold",
         ),
-        # alignment=ft.Alignment.CENTER,
         margin=ft.margin.only(left=120),
-        # width=150,
-        # height=150,
         padding= 15,
         bgcolor = ft.Colors.BLACK12,
         border_radius = ft.border_radius.all(25),
-        # padding = 5
     )
     titulo_processo = ft.Text(
         "Controle de Processos arquivado na Conformidade",
@@ -266,7 +236,6 @@ def main(page: ft.Page):
  
     cabecalho = ft.Container(
         alignment=ft.alignment.center,
-        # bgcolor=ft.Colors.BLUE_100,
         padding= 5,
         bgcolor = ft.Colors.BLACK12,
         border_radius = ft.border_radius.all(25),
@@ -275,7 +244,6 @@ def main(page: ft.Page):
  
     
     ano = ft.TextField(label="Digite o Ano do Processo",  color=cor)
-    # unidadegestora = ft.TextField(label="Digite a Unidade Gestora", color=cor, max_length=6)
     unidadegestoradown = ft.Dropdown(
         width=200,
         options=[
@@ -303,7 +271,6 @@ def main(page: ft.Page):
     
     id_atualizar = ft.TextField(label="Digite o Ano do Processo",  color=cor, visible=False)
     ano_atualizar = ft.TextField(label="Digite o Ano do Processo",  color=cor)
-    # unidadegestora_atualizar = ft.TextField(label="Digite a Unidade Gestora", color=cor, max_length=6)
     unidadegestoradown_atualizar = ft.Dropdown(
         width=200,
         options=[
@@ -318,24 +285,13 @@ def main(page: ft.Page):
     dataprotocolo_atualizar = ft.TextField(label="dd/mm/YYYY", keyboard_type = ft.KeyboardType.DATETIME,  color=cor, width=200)
     secaoprotocolo_atualizar = ft.TextField(label="Digite a seção que o doc será protocolado", color=cor, width=390)
     
-    # img = ft.Image(
-    #     src="logohges.png",
-    #     width=100,
-    #     height=100,
-    #     fit=ft.ImageFit.NONE,
-    # )
-    
-    # a1 = ft.CircleAvatar( foreground_image_src="runnergame72.png", content=ft.Text("autor"), width=40, height=40)
-    
     imagem = ft.Container(
-        # image_src="https://img.cdndsgni.com/preview/11834815.jpg",
         image_src="runnergame72.png",
         image_fit=ft.ImageFit.CONTAIN,
         image_repeat=ft.ImageRepeat.NO_REPEAT,
         width=25,
         height=25,
         border_radius=ft.border_radius.all(5),
-        # bgcolor=ft.Colors.AMBER
         )
     
     linha_protocolo = ft.Row(
@@ -347,7 +303,6 @@ def main(page: ft.Page):
     )
     
     linha_conteiner = ft.Container(
-        # expand=True,
         content=ft.Row([
             ft.Column(
                 [
@@ -355,9 +310,7 @@ def main(page: ft.Page):
                     subtitulo_conteiner,
                     titulo_conteiner,
                 ],
-                # alignment=ft.MainAxisAlignment.CENTER,
             ),
-        # margin=ft.margin.only(left=300),
         ],
         alignment=ft.MainAxisAlignment.CENTER,               
         ),
@@ -368,8 +321,6 @@ def main(page: ft.Page):
                     "Sair", 
                     icon=ft.Icons.CLOSE_FULLSCREEN,
                     bgcolor=ft.colors.RED_500,
-                    # size=20,
-                    # padding=15,
                     on_click= sair,
                 )
     
@@ -377,8 +328,6 @@ def main(page: ft.Page):
                             "Cadastrar", 
                             icon=ft.Icons.ADD,
                             bgcolor=ft.Colors.BLUE_500,
-                            # size=20,
-                            # padding=15,
                             on_click= cadastrar,
                         )
  
@@ -386,8 +335,6 @@ def main(page: ft.Page):
                             "Atualizar", 
                             icon=ft.Icons.UPDATE,
                             bgcolor=ft.colors.BLUE_500,
-                            # size=20,
-                            # padding=15,
                             on_click= atualizar,
                         )
     
@@ -395,8 +342,6 @@ def main(page: ft.Page):
                     "Apagar", 
                     icon=ft.Icons.DELETE,
                     bgcolor=ft.colors.RED_500,
-                    # size=20,
-                    # padding=15,
                     on_click= apagar,
                 )
 
@@ -404,8 +349,6 @@ def main(page: ft.Page):
                     "Imprimir", 
                     icon=ft.Icons.PRINT,
                     bgcolor=ft.colors.AMBER_500,
-                    # size=20,
-                    # padding=15,
                     on_click= imprimir,
                 )
     
@@ -413,14 +356,10 @@ def main(page: ft.Page):
                     "Cancelar", 
                     icon=ft.Icons.CANCEL_OUTLINED,
                     bgcolor=ft.colors.BLACK26,
-                    # size=20,
-                    # padding=15,
                     on_click= cancelar,
                 )
     
     pesquisa = ft.DataTable(
-        # expand=True,
-            # scroll="always",
             columns=[
                 ft.DataColumn(ft.Text("id", color=cor, size = 15), visible=False),
                 ft.DataColumn(ft.Text("Ano", color=cor, size=15)),
@@ -437,7 +376,6 @@ def main(page: ft.Page):
     )
     
     atualizar_conteiner = ft.Container(
-        # expand=True,
         visible=False,
         content=ft.Column(
             controls=[
@@ -462,13 +400,6 @@ def main(page: ft.Page):
     linha_titulo = ft.Row(
                         controls = [
                             titulo_processo,
-                            # ft.Column(
-                            #     [
-                            #         # ft.Text("Sair", color=cor, size=15),
-                            #         botao_sair,
-                            #     ],
-                            #     # spacing=5
-                            # ),
                         ],
                 )
     
@@ -538,12 +469,7 @@ def main(page: ft.Page):
                     ),
                 locprocesso,
                 botao_cadastrar,
-                
-                # ft.Row(
-                #     controls=[
-                #         botao_cadastrar,
-                #     ],
-                # ),
+
             ],
         )
     ],
@@ -551,12 +477,10 @@ def main(page: ft.Page):
     )
     
     linha2 = ft.Row(
-        # expand=True,
         controls=[
 
             ft.Column(
                 scroll=ft.ScrollMode.ALWAYS,
-                # on_scroll=on_column_scroll,
                 controls=[
                     ft.Text(
                         "Relatório",
@@ -568,14 +492,12 @@ def main(page: ft.Page):
                 ],
             ),
         ],
-        # scroll=ft.ScrollMode.ALWAYS,
     )
 
     linha3 = ft.Row(
         controls=[
 
             ft.Column(
-                # scroll="always",
                 controls=[
                     ft.Text(
                         "Relatório",
@@ -586,13 +508,11 @@ def main(page: ft.Page):
                     atualizar_conteiner,
                     radio_pesquisa,
                     campo_pesquisa,
-                    # botao_pesquisar,
                     ft.Container(
                         expand=True,
                         content=ft.Row(
                             [ft.Column(
                                 controls=[pesquisa],
-                                # scroll=ft.ScrollMode.ADAPTIVE,
                                 scroll=ft.ScrollMode.ALWAYS #,expand=1,horizontal_alignment=ft.CrossAxisAlignment.START 
                             ),
                         ],
@@ -606,7 +526,6 @@ def main(page: ft.Page):
             ),
         ],
         alignment=ft.MainAxisAlignment.CENTER,
-        # scroll=ft.ScrollMode.ALWAYS,
     )
     
     screen_lista= [linha1, linha3, linha2]
@@ -618,15 +537,12 @@ def main(page: ft.Page):
     )
     
     sidebar_rail_linha=ft.Row(
-        # expand=True,
         controls=[
             rail,
             ft.VerticalDivider(width=1),
             ft.Column(
                     [  
-                        # principal, 
                         principal,
-                        # botao_cadastrar,
                     ],
             )
         ],
@@ -639,17 +555,8 @@ def main(page: ft.Page):
             linha_titulo,
             sidebar_rail_linha,
             ft.Row(controls=[ft.Container(width=25), botao_sair,ft.Container(expand=True), imagem, ft.Text("by Nelson Luz", color=ft.Colors.BLACK, size=9,), ]),
-            # ft.Container(
-            #     content=ft.ElevatedButton("Page theme button"),
-            #     bgcolor=ft.Colors.ON_SURFACE_VARIANT,
-            #     padding=20,
-            #     width=300,
-            # ),
     )
     
-    
-
-
 
 
 if __name__ == "__main__":
