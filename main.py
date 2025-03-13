@@ -1,8 +1,10 @@
+from operator import contains
 from re import I
 import flet as ft
 from flet.core.grid_view import ScrollableControl
 from dbdocument import Document
 from protocolo import Protocolo
+from relatorio import Relatorio
 
 
 def main(page: ft.Page):
@@ -49,6 +51,12 @@ def main(page: ft.Page):
         radio_pesquisa.update()
         page.update()
     
+    def zerarimprerela():
+        categoriaimpressao.value = "" 
+        pesquisa_impressao_relatorio.value = ""
+        page.update()
+        
+    
     def preencher_campos(e):
         atualizar_conteiner.visible=True
         radio_pesquisa.visible=False
@@ -81,6 +89,27 @@ def main(page: ft.Page):
         printed.cria_pdf()
         print(f"Funcao Imprimir: {ano_atualizar.value}, {unidadegestoradown_atualizar.value}, {numeracao_atualizar.value}, {assunto_atualizar.value}, {tipoprocesso_atualizar.value}, {locprocesso_atualizar.value}, {dataprotocolo_atualizar.value}, {secaoprotocolo_atualizar.value} ")
         zeratualizar()
+    
+    def impressao_relatório(e):
+        print(f"impressao relatorio {categoriaimpressao.value} ")
+        match categoriaimpressao.value:
+            case "ano":
+                query = Document.select().where(Document.ano.contains(pesquisa_impressao_relatorio.value))
+            case "assunto":
+                query = Document.select().where(Document.ano.contains(pesquisa_impressao_relatorio.value))
+            case _:
+                query = Document.select().order_by(Document.ano.asc())
+
+        relatorio = Relatorio(query, pesquisa_impressao_relatorio.value, categoriaimpressao.value)
+        relatorio.cria_pdf()
+                
+        zerarimprerela()
+        
+        
+    
+    # def relatorio(query_relatorio):
+    #     for doc in query_relatorio:
+    #         print(f"assunto: {doc.assunto}, ano: {doc.ano}")
         
     def criar_pesquisa(e):
         saida_radio.value = e.control.value
@@ -200,9 +229,17 @@ def main(page: ft.Page):
                 selected_icon=ft.Icons.NEWSPAPER,
                 label_content=ft.Text("Relatório", color=ft.Colors.WHITE),                
             ),
+            ft.NavigationRailDestination(
+                icon=ft.Icons.PRINT_OUTLINED,
+                selected_icon=ft.Icons.PRINT,
+                label_content=ft.Text("Impressão", color=ft.Colors.WHITE),                
+            ),
         ],
         on_change=set_screen,  
     )
+    
+    # def fechardlg(e):
+    #     page.close(dlg_modal)
     
     titulo = "Sistema de Controle de Documentos"
     subtitulo = "CONFORMIDADE"
@@ -251,7 +288,7 @@ def main(page: ft.Page):
             ft.dropdown.Option("167039"),
         ]
     )
-    numeracao = ft.TextField(label="Digite o número do Processo", color=cor)
+    numeracao = ft.TextField(label="Digite o número do Processo", color=cor, width=600)
     assunto = ft.TextField(label="Digite o assunto do processo", color=cor, width=600)
     tipoprocesso = ft.TextField(label="Digite o tipo do processo", color=cor, width=600)
     locprocesso = ft.TextField(label="Digite o local o processo se encontra - Cx e instalação", color=cor, width=600)
@@ -284,6 +321,17 @@ def main(page: ft.Page):
     locprocesso_atualizar = ft.TextField(label="Digite o local o processo se encontra - Cx e instalação", color=cor, width=600)
     dataprotocolo_atualizar = ft.TextField(label="dd/mm/YYYY", keyboard_type = ft.KeyboardType.DATETIME,  color=cor, width=200)
     secaoprotocolo_atualizar = ft.TextField(label="Digite a seção que o doc será protocolado", color=cor, width=390)
+    
+    categoriaimpressao = ft.Dropdown(
+        width=200,
+        options=[
+            # ft.dropdown.Option(" "),
+            ft.dropdown.Option("assunto"),
+            ft.dropdown.Option("ano"),
+        ]
+    )
+    
+    pesquisa_impressao_relatorio = ft.TextField(label="Digite a pesquisa, para impressão", color=cor, width=600)
     
     imagem = ft.Container(
         image_src="runnergame72.png",
@@ -358,6 +406,13 @@ def main(page: ft.Page):
                     bgcolor=ft.colors.BLACK26,
                     on_click= cancelar,
                 )
+ 
+    botao_imprimir_relatorio = ft.FilledButton(
+                            "Imprimir", 
+                            icon=ft.Icons.PRINT_ROUNDED,
+                            bgcolor=ft.colors.AMBER_500,
+                            on_click= impressao_relatório,
+                        )
     
     pesquisa = ft.DataTable(
             columns=[
@@ -374,6 +429,20 @@ def main(page: ft.Page):
             rows=[],
             expand=True,
     )
+    
+    # dlg_modal = ft.AlertDialog(
+    #     modal=True,
+    #     title=ft.Text("Impressão Relatório"),
+    #     content=categoriaimpressao,
+    #     actions=[
+    #         ft.TextButton("Sim", on_click=fechardlg),
+    #         ft.TextButton("Não", on_click=fechardlg),
+    #     ],
+    #     actions_alignment=ft.MainAxisAlignment.END,
+    #     on_dismiss=lambda e: page.add(
+    #         ft.Text("Modal dialog dismissed"),
+    #     ),
+    # )
     
     atualizar_conteiner = ft.Container(
         visible=False,
@@ -406,94 +475,174 @@ def main(page: ft.Page):
        
     linha1 = ft.Row([
         
-        ft.Column(
-            expand=True,
-            controls=[
+        # ft.Column(
+        #     expand=True,
+        #     controls=[
+        #         ft.Text(
+        #             "Cadastro de Processos",
+        #             color=cor,
+        #             size=20,
+        #             weight="bold",
+        #         ),
+                ft.Container(
+                    content=ft.Column(
+                        [
+                            ft.Text(
+                                "Cadastro de Processos",
+                                color=cor,
+                                size=20,
+                                weight="bold",
+                            ),
+                            ft.Row(
+                                controls=[
+                                    
+                                    ft.Column(
+                                        controls=[
+                                            ft.Text(
+                                                "Ano:",
+                                                color=cor,
+                                                size=15,
+                                            ),
+                                            ano,
+                                        ],
+                                    ),
+                                    ft.Column(
+                                        controls=[
+                                            ft.Text(
+                                                "UG:",
+                                                color=cor,
+                                                size=15,
+                                            ),
+                                            unidadegestoradown,
+                                        ],
+                                    ),
+                                ],
+                            ),
+                            ft.Text(
+                                "Numeração:",
+                                color=cor,
+                                size=15,
+                            ),
+                            numeracao,
+                            
+                            ft.Text(
+                                "Assunto:",
+                                color=cor,
+                                size=15,
+                            ),
+                            assunto,
+                
+                            ft.Text(
+                                    "Tipo:",
+                                    color=cor,
+                                    size=15,
+                                ),
+                            tipoprocesso,
+                                
+                            ft.Text(
+                                    "Localização:",
+                                    color=cor,
+                                    size=15,
+                                ),
+                            locprocesso,
+                            botao_cadastrar,
+                        ]
+                    ),
+                    bgcolor=ft.Colors.BLACK12,
+                    width=700,
+                    border=ft.border.all(2, ft.Colors.BLACK),
+                    padding=ft.padding.all(10),
+                    border_radius=10,
+                    margin=ft.margin.only(left=50),
+                ),
+
+                # ft.Text(
+                #     "Numeração:",
+                #     color=cor,
+                #     size=15,
+                # ),
+                # numeracao,
+                
+                # ft.Text(
+                #     "Assunto:",
+                #     color=cor,
+                #     size=15,
+                # ),
+                # assunto,
+                
+                # ft.Text(
+                #         "Tipo:",
+                #         color=cor,
+                #         size=15,
+                #     ),
+                # tipoprocesso,
+                    
+                # ft.Text(
+                #         "Localização:",
+                #         color=cor,
+                #         size=15,
+                #     ),
+                # locprocesso,
+                # botao_cadastrar,
+
+            ],
+        )
+    # ],
+    # alignment=ft.MainAxisAlignment.CENTER,
+    # )
+    
+    # linha2 = ft.Row(
+    #     controls=[
+
+    #         ft.Column(
+    #             scroll=ft.ScrollMode.ALWAYS,
+    #             controls=[
+    #                 ft.Text(
+    #                     "Impressão de Relatórios",
+    #                     color=cor,
+    #                     size=20,
+    #                     weight="bold",
+    #                 ),
+    #                 pesquisa,
+    #             ],
+    #         ),
+    #     ],
+    # )
+
+    linha2 = ft.Row([
+        ft.Container(
+            content=ft.Column([
                 ft.Text(
-                    "Cadastro de Processos",
+                    "Impressão de Relatório",
                     color=cor,
                     size=20,
                     weight="bold",
                 ),
-                ft.Row(
-                    controls=[
-                        
-                        ft.Column(
-                            controls=[
-                                ft.Text(
-                                    "Ano:",
-                                    color=cor,
-                                    size=15,
-                                ),
-                                ano,
-                            ],
-                        ),
-                        ft.Column(
-                            controls=[
-                                ft.Text(
-                                    "UG:",
-                                    color=cor,
-                                    size=15,
-                                ),
-                                unidadegestoradown,
-                            ],
-                        ),
-                    ],
-                ),
-
                 ft.Text(
-                    "Numeração:",
+                    "impressão de processo pela categoria:",
                     color=cor,
                     size=15,
                 ),
-                numeracao,
-                
+                categoriaimpressao,
                 ft.Text(
-                    "Assunto:",
+                    "pesquisa na categoria:",
                     color=cor,
                     size=15,
                 ),
-                assunto,
-                
-                ft.Text(
-                        "Tipo:",
-                        color=cor,
-                        size=15,
-                    ),
-                tipoprocesso,
-                    
-                ft.Text(
-                        "Localização:",
-                        color=cor,
-                        size=15,
-                    ),
-                locprocesso,
-                botao_cadastrar,
-
-            ],
-        )
-    ],
-    alignment=ft.MainAxisAlignment.CENTER,
-    )
+                pesquisa_impressao_relatorio,
+                botao_imprimir_relatorio,
+            ]),
+        bgcolor=ft.Colors.BLACK12,
+        width=700,
+        height=300,
+        border=ft.border.all(2, ft.Colors.BLACK),
+        padding=ft.padding.all(10),
+        border_radius=10,
+        margin=ft.margin.only(left=50,),
+            
+        ),
+    ])
     
-    linha2 = ft.Row(
-        controls=[
-
-            ft.Column(
-                scroll=ft.ScrollMode.ALWAYS,
-                controls=[
-                    ft.Text(
-                        "Relatório",
-                        color=cor,
-                        size=20,
-                        weight="bold",
-                    ),
-                    pesquisa,
-                ],
-            ),
-        ],
-    )
-
     linha3 = ft.Row(
         controls=[
 
