@@ -85,7 +85,7 @@ class Relatorio:
         flowables = []
         cabecalho = Paragraph("Conformidade - HGes", cabecalho_style)
         paragraph_1 = Paragraph("RELATÓRIO DE DOCUMENTOS DA CONFORMIDADE", headline_style)
-        paragraph_0 = Paragraph(self.categoria, headline_style)
+        paragraph_0 = Paragraph(self.categoria.upper() + " '"+ self.tipodepesquisa +"'", headline_style)
         # cabecalho_tabela = Paragraph("--------------------------------------------------------------------", paragraph_style)
         flowables.append(cabecalho)
         flowables.append(paragraph_1)
@@ -108,7 +108,7 @@ class Relatorio:
                 # paragraph_style
                 # str(index+1) + ") <strong>Ano:</strong> "+ doc.ano + " | UG: " + doc.unidadegestora + " | Nr: " + doc.numeracao + " | Ass: " + doc.assunto +" | Proc: " + doc.tipoprocesso,
                 # paragraph_style
-                str(index+1) + ") <strong>Ano:</strong> "+ doc.ano + " | <strong>UG</strong>: " + doc.unidadegestora + " | <strong>Nr:</strong> " + doc.numeracao + " | <strong>Assunto:</strong> " + doc.assunto +" | <strong>Processo:</strong> " + doc.tipoprocesso,
+                str(index+1) + ") <strong>Ano:</strong> "+ doc.ano + " | <strong>UG</strong>: " + doc.unidadegestora + " | <strong>Nr:</strong> " + doc.numeracao + " | <strong>Assunto:</strong> " + doc.assunto +" | <strong>Processo:</strong> " + doc.tipoprocesso +" | <strong>Localização:</strong> " + doc.locprocesso,
                 paragraph_style
             )
             flowables.append(paragraph_2)

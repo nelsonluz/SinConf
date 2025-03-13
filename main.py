@@ -96,11 +96,13 @@ def main(page: ft.Page):
             case "ano":
                 query = Document.select().where(Document.ano.contains(pesquisa_impressao_relatorio.value))
             case "assunto":
-                query = Document.select().where(Document.ano.contains(pesquisa_impressao_relatorio.value))
+                query = Document.select().where(Document.assunto.contains(pesquisa_impressao_relatorio.value)).order_by(Document.ano.asc())
             case _:
+                categoriaimpressao.value =  "arquivos"
+                pesquisa_impressao_relatorio.value = "Completo"
                 query = Document.select().order_by(Document.ano.asc())
 
-        relatorio = Relatorio(query, pesquisa_impressao_relatorio.value, categoriaimpressao.value)
+        relatorio = Relatorio(query, categoriaimpressao.value, pesquisa_impressao_relatorio.value)
         relatorio.cria_pdf()
                 
         zerarimprerela()
