@@ -486,140 +486,80 @@ def main(page: ft.Page):
     
        
     linha1 = ft.Row([
-        
-        # ft.Column(
-        #     expand=True,
-        #     controls=[
-        #         ft.Text(
-        #             "Cadastro de Processos",
-        #             color=cor,
-        #             size=20,
-        #             weight="bold",
-        #         ),
-                ft.Container(
-                    content=ft.Column(
-                        [
-                            ft.Text(
-                                "Cadastro de Processos",
-                                color=cor,
-                                size=20,
-                                weight="bold",
-                            ),
-                            ft.Row(
-                                controls=[
-                                    
-                                    ft.Column(
-                                        controls=[
-                                            ft.Text(
-                                                "Ano:",
-                                                color=cor,
-                                                size=15,
-                                            ),
-                                            ano,
-                                        ],
-                                    ),
-                                    ft.Column(
-                                        controls=[
-                                            ft.Text(
-                                                "UG:",
-                                                color=cor,
-                                                size=15,
-                                            ),
-                                            unidadegestoradown,
-                                        ],
-                                    ),
-                                ],
-                            ),
-                            ft.Text(
-                                "Numeração:",
-                                color=cor,
-                                size=15,
-                            ),
-                            numeracao,
-                            
-                            ft.Text(
-                                "Assunto:",
-                                color=cor,
-                                size=15,
-                            ),
-                            assunto,
-                
-                            ft.Text(
-                                    "Tipo:",
-                                    color=cor,
-                                    size=15,
-                                ),
-                            tipoprocesso,
-                                
-                            ft.Text(
-                                    "Localização:",
-                                    color=cor,
-                                    size=15,
-                                ),
-                            locprocesso,
-                            botao_cadastrar,
-                        ]
-                    ),
-                    bgcolor=ft.Colors.BLACK12,
-                    width=700,
-                    border=ft.border.all(2, ft.Colors.BLACK),
-                    padding=ft.padding.all(10),
-                    border_radius=10,
-                    margin=ft.margin.only(left=50),
+
+        ft.Container(
+            content=ft.Column(
+            [
+                ft.Text(
+                    "Cadastro de Processos",
+                    color=cor,
+                    size=20,
+                    weight="bold",
                 ),
-
-                # ft.Text(
-                #     "Numeração:",
-                #     color=cor,
-                #     size=15,
-                # ),
-                # numeracao,
+                ft.Row(
+                    controls=[
+                        
+                        ft.Column(
+                            controls=[
+                                ft.Text(
+                                    "Ano:",
+                                    color=cor,
+                                    size=15,
+                                ),
+                                ano,
+                            ],
+                        ),
+                        ft.Column(
+                            controls=[
+                                ft.Text(
+                                    "UG:",
+                                    color=cor,
+                                    size=15,
+                                ),
+                                unidadegestoradown,
+                            ],
+                        ),
+                    ],
+                ),
+                ft.Text(
+                    "Numeração:",
+                    color=cor,
+                    size=15,
+                ),
+                numeracao,
                 
-                # ft.Text(
-                #     "Assunto:",
-                #     color=cor,
-                #     size=15,
-                # ),
-                # assunto,
-                
-                # ft.Text(
-                #         "Tipo:",
-                #         color=cor,
-                #         size=15,
-                #     ),
-                # tipoprocesso,
-                    
-                # ft.Text(
-                #         "Localização:",
-                #         color=cor,
-                #         size=15,
-                #     ),
-                # locprocesso,
-                # botao_cadastrar,
-
-            ],
-        )
-    # ],
-    # alignment=ft.MainAxisAlignment.CENTER,
-    # )
+                ft.Text(
+                    "Assunto:",
+                    color=cor,
+                    size=15,
+                ),
+                assunto,
     
-    # linha2 = ft.Row(
-    #     controls=[
-
-    #         ft.Column(
-    #             scroll=ft.ScrollMode.ALWAYS,
-    #             controls=[
-    #                 ft.Text(
-    #                     "Impressão de Relatórios",
-    #                     color=cor,
-    #                     size=20,
-    #                     weight="bold",
-    #                 ),
-    #                 pesquisa,
-    #             ],
-    #         ),
-    #     ],
-    # )
+                ft.Text(
+                        "Tipo:",
+                        color=cor,
+                        size=15,
+                    ),
+                tipoprocesso,
+                    
+                ft.Text(
+                        "Localização:",
+                        color=cor,
+                        size=15,
+                    ),
+                locprocesso,
+                botao_cadastrar,
+            ]
+            ),
+            bgcolor=ft.Colors.BLACK12,
+            width=700,
+            border=ft.border.all(2, ft.Colors.BLACK),
+            padding=ft.padding.all(10),
+            border_radius=10,
+            margin=ft.margin.only(left=50),
+        ),
+    ],
+    )
 
     linha2 = ft.Row([
         ft.Container(
