@@ -97,6 +97,13 @@ def main(page: ft.Page):
                 query = Document.select().where(Document.ano.contains(pesquisa_impressao_relatorio.value))
             case "assunto":
                 query = Document.select().where(Document.assunto.contains(pesquisa_impressao_relatorio.value)).order_by(Document.ano.asc())
+            case "processo":
+                query = Document.select().where(Document.tipoprocesso.contains(pesquisa_impressao_relatorio.value)).order_by(Document.ano.asc())
+            case "UG":
+                query = Document.select().where(Document.unidadegestora.contains(pesquisa_impressao_relatorio.value)).order_by(Document.ano.asc())
+            case "local processo":
+                query = Document.select().where(Document.locprocesso.contains(pesquisa_impressao_relatorio.value)).order_by(Document.ano.asc())
+
             case _:
                 categoriaimpressao.value =  "arquivos"
                 pesquisa_impressao_relatorio.value = "Completo"
@@ -330,6 +337,9 @@ def main(page: ft.Page):
             # ft.dropdown.Option(" "),
             ft.dropdown.Option("assunto"),
             ft.dropdown.Option("ano"),
+            ft.dropdown.Option("processo"),
+            ft.dropdown.Option("UG"),
+            ft.dropdown.Option("local processo")
         ]
     )
     
