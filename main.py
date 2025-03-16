@@ -113,13 +113,7 @@ def main(page: ft.Page):
         relatorio.cria_pdf()
                 
         zerarimprerela()
-        
-        
-    
-    # def relatorio(query_relatorio):
-    #     for doc in query_relatorio:
-    #         print(f"assunto: {doc.assunto}, ano: {doc.ano}")
-        
+               
     def criar_pesquisa(e):
         saida_radio.value = e.control.value
         page.update()
@@ -246,17 +240,14 @@ def main(page: ft.Page):
         ],
         on_change=set_screen,  
     )
-    
-    # def fechardlg(e):
-    #     page.close(dlg_modal)
-    
+        
     titulo = "Sistema de Controle de Documentos"
     subtitulo = "CONFORMIDADE"
     titulo_conteiner = ft.Container(
         content = ft.Text(titulo,
                     size=20,
                     color=cor,
-                    weight="bold",
+                    weight=ft.FontWeight.BOLD,
                 ),
         bgcolor = ft.Colors.BLACK12,
         border_radius = ft.border_radius.all(25),
@@ -266,7 +257,7 @@ def main(page: ft.Page):
         content = ft.Text(subtitulo,
                     size=20,
                     color=cor,
-                    weight="bold",
+                    weight=ft.FontWeight.BOLD,
         ),
         margin=ft.margin.only(left=120),
         padding= 15,
@@ -277,7 +268,7 @@ def main(page: ft.Page):
         "Controle de Processos arquivado na Conformidade",
         color=cor,
         size=25,
-        weight="bold",
+        weight=ft.FontWeight.BOLD,
     )
  
     cabecalho = ft.Container(
@@ -442,20 +433,6 @@ def main(page: ft.Page):
             expand=True,
     )
     
-    # dlg_modal = ft.AlertDialog(
-    #     modal=True,
-    #     title=ft.Text("Impressão Relatório"),
-    #     content=categoriaimpressao,
-    #     actions=[
-    #         ft.TextButton("Sim", on_click=fechardlg),
-    #         ft.TextButton("Não", on_click=fechardlg),
-    #     ],
-    #     actions_alignment=ft.MainAxisAlignment.END,
-    #     on_dismiss=lambda e: page.add(
-    #         ft.Text("Modal dialog dismissed"),
-    #     ),
-    # )
-    
     atualizar_conteiner = ft.Container(
         visible=False,
         content=ft.Column(
@@ -483,10 +460,8 @@ def main(page: ft.Page):
                             titulo_processo,
                         ],
                 )
-    
        
     linha1 = ft.Row([
-
         ft.Container(
             content=ft.Column(
             [
@@ -494,32 +469,31 @@ def main(page: ft.Page):
                     "Cadastro de Processos",
                     color=cor,
                     size=20,
-                    weight="bold",
+                    weight=ft.FontWeight.BOLD,
                 ),
                 ft.Row(
+                controls=[
+                    ft.Column(
                     controls=[
-                        
-                        ft.Column(
-                            controls=[
-                                ft.Text(
-                                    "Ano:",
-                                    color=cor,
-                                    size=15,
-                                ),
-                                ano,
-                            ],
+                        ft.Text(
+                            "Ano:",
+                            color=cor,
+                            size=15,
                         ),
-                        ft.Column(
-                            controls=[
-                                ft.Text(
-                                    "UG:",
-                                    color=cor,
-                                    size=15,
-                                ),
-                                unidadegestoradown,
-                            ],
-                        ),
+                        ano,
                     ],
+                    ),
+                    ft.Column(
+                    controls=[
+                        ft.Text(
+                            "UG:",
+                            color=cor,
+                            size=15,
+                        ),
+                        unidadegestoradown,
+                    ],
+                    ),
+                ],
                 ),
                 ft.Text(
                     "Numeração:",
@@ -536,16 +510,16 @@ def main(page: ft.Page):
                 assunto,
     
                 ft.Text(
-                        "Tipo:",
-                        color=cor,
-                        size=15,
+                    "Tipo:",
+                    color=cor,
+                    size=15,
                     ),
                 tipoprocesso,
                     
                 ft.Text(
-                        "Localização:",
-                        color=cor,
-                        size=15,
+                    "Localização:",
+                    color=cor,
+                    size=15,
                     ),
                 locprocesso,
                 botao_cadastrar,
@@ -568,7 +542,7 @@ def main(page: ft.Page):
                     "Impressão de Relatório",
                     color=cor,
                     size=20,
-                    weight="bold",
+                    weight=ft.FontWeight.BOLD,
                 ),
                 ft.Text(
                     "impressão de processo pela categoria:",
@@ -604,7 +578,7 @@ def main(page: ft.Page):
                         "Relatório",
                         color=cor,
                         size=20,
-                        weight="bold",
+                        weight=ft.FontWeight.BOLD,
                     ),
                     atualizar_conteiner,
                     radio_pesquisa,
